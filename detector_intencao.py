@@ -4,7 +4,7 @@ from pydantic import BaseModel
 import pandas as pd
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_community.vectorstores import FAISS
-from langchain_community.embeddings import OpenAIEmbeddings
+from langchain_openai import OpenAIEmbeddings
 from langchain_openai import ChatOpenAI
 
 # ✅ 1️⃣ Carregar variáveis de ambiente
