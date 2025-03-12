@@ -5,14 +5,13 @@ import pandas as pd
 from langchain_community.vectorstores import FAISS
 from langchain_openai import OpenAIEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from PyPDF2 import PdfReader
-import docx
-
-# ✅ 1️⃣ Carregar variáveis de ambiente
+import shutil
 from dotenv import load_dotenv
+
+# ✅ Carregar variáveis de ambiente
 load_dotenv()
 
-# ✅ 2️⃣ Função para carregar documentos da pasta "docs"
+# ✅ Função para carregar documentos da pasta "docs"
 def load_documents(directory="docs"):
     texts = []
     intents = []
@@ -20,12 +19,12 @@ def load_documents(directory="docs"):
     # Verifica se a pasta existe
     if not os.path.exists(directory):
         os.makedirs(directory)  # Cria a pasta se não existir
-        return texts, intents   # Retorna listas vazias se não houver arquivos
+        return texts, intents
 
     # 🔄 Percorre todos os arquivos na pasta
     for file in os.listdir(directory):
         file_path = os.path.join(directory, file)
-        ext = file.split(".")[-1]  # Pega a extensão do arquivo
+        ext = file.split(".")[-1]
 
         # 📄 Processa arquivos CSV (mensagem e intenção)
         if ext == "csv":
@@ -33,20 +32,33 @@ def load_documents(directory="docs"):
             texts.extend(df["mensagem"].tolist())   # Salva mensagens
             intents.extend(df["intencao"].tolist()) # Salva intenções
 
-    return texts, intents  # Retorna listas com mensagens e intenções
+    return texts, intents
 
-# ✅ 3️⃣ Carregar documentos e criar embeddings
+# ✅ Carregar documentos e criar embeddings
 texts, intents = load_documents()
 if not texts:
     raise FileNotFoundError("Nenhum arquivo CSV encontrado na pasta 'docs'!")
 
+print(f"📂 Total de entradas no CSV: {len(texts)}")
+
+# 🔄 Remover índice FAISS antigo e recriar
+if os.path.exists("faiss_index"):
+    shutil.rmtree("faiss_index")
+
 embeddings = OpenAIEmbeddings()
-text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
-documents = text_splitter.split_text("\n".join(texts))
-vectorstore = FAISS.from_texts(documents, embeddings)
+text_splitter = RecursiveCharacterTextSplitter(chunk_size=100, chunk_overlap=20)
+documents = text_splitter.create_documents(texts)  # ⚠️ Alteração aqui!
+vectorstore = FAISS.from_documents(documents, embeddings)  # ⚠️ Agora usa documentos fragmentados!
 retriever = vectorstore.as_retriever()
 
-# ✅ 4️⃣ Criar a API FastAPI
+print(f"📦 Total de documentos no FAISS: {len(vectorstore.index_to_docstore_id)}")
+
+# 🔍 Teste FAISS manualmente
+test_query = "agendar horário"
+test_results = retriever.invoke(test_query)
+print(f"🛠 Teste FAISS (busca por '{test_query}'): {test_results}")
+
+# ✅ Criar a API FastAPI
 app = FastAPI()
 
 class Pergunta(BaseModel):
@@ -54,17 +66,21 @@ class Pergunta(BaseModel):
 
 @app.post("/chat")
 def chat(pergunta: Pergunta):
-    # 🔍 Buscar as mensagens mais próximas no CSV
-    context_docs = retriever.get_relevant_documents(pergunta.pergunta)
+    print(f"🔎 Buscando intenção para: {pergunta.pergunta}")
+    context_docs = retriever.invoke(pergunta.pergunta)[:1]  # Retorna apenas o documento mais relevante
+    print(f"📝 Resultados encontrados: {context_docs}")
 
     if not context_docs:
-        return {"intencoes": []}  # Retorna lista vazia se não encontrar
+        return {"intencoes": []}  # Se não encontrar nada, retorna lista vazia
 
-    # 📄 Associar mensagens às intenções do CSV
+    # 📌 Associar mensagens às intenções
     matched_intents = []
     for doc in context_docs:
-        if doc.page_content in texts:
-            index = texts.index(doc.page_content)
-            matched_intents.append({"mensagem": doc.page_content, "intencao": intents[index]})
+        mensagem_normalizada = doc.page_content.strip().lower()
+        for original, intent in zip(texts, intents):
+            if mensagem_normalizada == original.strip().lower():
+                matched_intents.append({"mensagem": original, "intencao": intent})
+                break  # Garante que só pega uma intenção por documento
 
+    print(f"✅ Intenções retornadas: {matched_intents}")
     return {"intencoes": matched_intents}
