@@ -4,9 +4,12 @@ from pydantic import BaseModel
 import pandas as pd
 from langchain_community.vectorstores import FAISS
 from langchain_openai import OpenAIEmbeddings
-from dotenv import load_dotenv
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+from PyPDF2 import PdfReader
+import docx
 
 # ✅ 1️⃣ Carregar variáveis de ambiente
+from dotenv import load_dotenv
 load_dotenv()
 
 # ✅ 2️⃣ Função para carregar documentos da pasta "docs"
@@ -14,7 +17,7 @@ def load_documents(directory="docs"):
     texts = []
     intents = []
 
-    # 🔍 Verifica se a pasta existe, se não, cria
+    # Verifica se a pasta existe
     if not os.path.exists(directory):
         os.makedirs(directory)  # Cria a pasta se não existir
         return texts, intents   # Retorna listas vazias se não houver arquivos
@@ -38,10 +41,12 @@ if not texts:
     raise FileNotFoundError("Nenhum arquivo CSV encontrado na pasta 'docs'!")
 
 embeddings = OpenAIEmbeddings()
-vectorstore = FAISS.from_texts(texts, embeddings)
-retriever = vectorstore.as_retriever(search_kwargs={"k": 3})  # Retorna os 3 mais próximos
+text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
+documents = text_splitter.split_text("\n".join(texts))
+vectorstore = FAISS.from_texts(documents, embeddings)
+retriever = vectorstore.as_retriever()
 
-# ✅ 4️⃣ Criar API FastAPI
+# ✅ 4️⃣ Criar a API FastAPI
 app = FastAPI()
 
 class Pergunta(BaseModel):
