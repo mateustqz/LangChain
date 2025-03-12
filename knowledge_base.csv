@@ -1,0 +1,39 @@
+;mensagem;intencao
+0;Quero marcar uma consulta;aguardando_horário
+1;Gostaria de agendar um horário;aguardando_horário
+2;Tem disponibilidade para consulta?;aguardando_horário
+3;Quais são os horários disponíveis?;aguardando_horário
+4;Pode ser com a Dra. Sandra;aguardando_horário
+5;Prefiro marcar com o Dr. Marcos;aguardando_horário
+6;Tem horários disponíveis com o Dr. João?;aguardando_horário
+7;Ainda preciso escolher um horário;aguardando_horário
+8;Quero ver os horários antes de confirmar;aguardando_horário
+9;Preciso saber os horários primeiro;aguardando_horário
+10;Quero marcar para sexta às 13h;aguardando_confirmação
+11;Escolho o horário de quarta-feira às 14h;aguardando_confirmação
+12;Vou confirmar esse horário;aguardando_confirmação
+13;Esse horário está bom para mim;aguardando_confirmação
+14;Pode marcar para esse horário mesmo;aguardando_confirmação
+15;Quero remarcar minha consulta;aguardando_remarcação
+16;Preciso mudar meu horário;aguardando_remarcação
+17;Gostaria de reagendar para outro dia;aguardando_remarcação
+18;Tem como remarcar para a semana que vem?;aguardando_remarcação
+19;Quero cancelar minha consulta;aguardando_cancelamento
+20;Preciso cancelar meu horário;aguardando_cancelamento
+21;Pode cancelar minha consulta, por favor;aguardando_cancelamento
+22;Tem como desmarcar esse horário?;aguardando_cancelamento
+23;Quero falar com um atendente;transferir_para_humano
+24;Preciso falar com um humano;transferir_para_humano
+25;Quero ser atendido por uma pessoa;transferir_para_humano
+26;Quero saber meu horário agendado;consultar_horario_agendado
+27;Tenho uma consulta agendada, qual o horário?;consultar_horario_agendado
+28;Qual o dia da minha próxima consulta?;consultar_horario_agendado
+29;Quero confirmar meu horário marcado;consultar_horario_agendado
+30;Oi, tudo bem?;nenhuma
+31;Qual o preço da consulta?;nenhuma
+32;Vocês aceitam plano de saúde?;nenhuma
+33;Onde fica a clínica?;nenhuma
+34;Sim, quero confirmar meu cancelamento;confirmacao_cancelamento
+35;Sim, pode cancelar;confirmacao_cancelamento
+36;Sim, quero remarcar;confirmacao_remarcacao
+37;Sim, pode remarcar para outro horário;confirmacao_remarcacao
