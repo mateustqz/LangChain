@@ -28,7 +28,8 @@ def load_documents(directory="docs"):
         # 📄 Processa arquivos CSV
         if ext == "csv":
             df = pd.read_csv(file_path, sep=";", dtype=str)
-            texts.extend(df["mensagem"].tolist())
+            for _, row in df.iterrows():
+                texts.append(f"{row['mensagem']};{row['intencao']}")
 
         # 📑 Processa arquivos PDF
         elif ext == "pdf":
@@ -58,7 +59,7 @@ embeddings = OpenAIEmbeddings()
 text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
 documents = text_splitter.split_text("\n".join(texts))
 vectorstore = FAISS.from_texts(documents, embeddings)
-retriever = vectorstore.as_retriever()
+retriever = vectorstore.as_retriever(search_kwargs={"k": 3})  # Retorna os 3 mais próximos
 
 # ✅ 4️⃣ Criar a API FastAPI
 app = FastAPI()
@@ -72,9 +73,15 @@ def chat(pergunta: Pergunta):
     context_docs = retriever.get_relevant_documents(pergunta.pergunta)
 
     if not context_docs:
-        return {"intencao": "nenhuma"}  # Se não encontrar nada, retorna "nenhuma"
+        return {"intencoes": []}  # Se não encontrar nada, retorna uma lista vazia
 
-    # 📄 Pega a melhor correspondência e retorna
-    resposta_doc = context_docs[0].page_content
+    # 📄 Formata os pares mensagem-intenção corretamente
+    intencoes = []
+    for doc in context_docs:
+        try:
+            mensagem, intencao = doc.page_content.split(";")
+            intencoes.append({"mensagem": mensagem.strip(), "intencao": intencao.strip()})
+        except ValueError:
+            continue  # Ignora se não tiver o formato esperado
 
-    return {"intencao": resposta_doc}
+    return {"intencoes": intencoes}
