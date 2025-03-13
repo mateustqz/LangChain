@@ -49,7 +49,7 @@ embeddings = OpenAIEmbeddings()
 text_splitter = RecursiveCharacterTextSplitter(chunk_size=100, chunk_overlap=20)
 documents = text_splitter.create_documents(texts)  # ⚠️ Alteração aqui!
 vectorstore = FAISS.from_documents(documents, embeddings)  # ⚠️ Agora usa documentos fragmentados!
-retriever = vectorstore.as_retriever()
+retriever = vectorstore.as_retriever(search_kwargs={"score_threshold": 0.7})  # ⚠️ Adicionado limiar de confiança
 
 print(f"📦 Total de documentos no FAISS: {len(vectorstore.index_to_docstore_id)}")
 
@@ -73,14 +73,22 @@ def chat(pergunta: Pergunta):
     if not context_docs:
         return {"intencoes": []}  # Se não encontrar nada, retorna lista vazia
 
-    # 📌 Associar mensagens às intenções
+    # 📌 Filtrar documentos com baixa similaridade
     matched_intents = []
     for doc in context_docs:
+        if hasattr(doc, "score") and doc.score < 0.7:
+            print("⚠️ Baixa similaridade! Ignorando resultado irrelevante.")
+            continue  # Ignora resultados com baixa similaridade
+
+        # 📌 Associar mensagens às intenções
         mensagem_normalizada = doc.page_content.strip().lower()
         for original, intent in zip(texts, intents):
             if mensagem_normalizada == original.strip().lower():
                 matched_intents.append({"mensagem": original, "intencao": intent})
                 break  # Garante que só pega uma intenção por documento
+
+    if not matched_intents:
+        return {"intencoes": []}  # Se não houver correspondência válida, retorna vazio
 
     print(f"✅ Intenções retornadas: {matched_intents}")
     return {"intencoes": matched_intents}
