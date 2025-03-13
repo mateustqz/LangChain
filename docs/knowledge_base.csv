@@ -18,26 +18,30 @@
 16;Tem como remarcar para a semana que vem?;aguardando_remarcação
 17;Posso mudar meu horário para segunda-feira?;aguardando_remarcação
 18;Preciso reagendar a consulta para outro médico;aguardando_remarcação
-19;Quero cancelar minha consulta;aguardando_cancelamento
-20;Preciso cancelar meu horário;aguardando_cancelamento
-21;Pode cancelar minha consulta, por favor;aguardando_cancelamento
-22;Tem como desmarcar esse horário?;aguardando_cancelamento
-23;Quero cancelar porque não posso comparecer;aguardando_cancelamento
-24;Preciso cancelar e marcar para outro dia;aguardando_cancelamento
-25;Quero falar com um atendente;transferir_para_humano
-26;Preciso falar com um humano;transferir_para_humano
-27;Quero ser atendido por uma pessoa;transferir_para_humano
-28;Quero falar com alguém do suporte;transferir_para_humano
-29;Preciso tirar dúvidas diretamente com a recepção;transferir_para_humano
-30;Quero saber meu horário agendado;consultar_horario_agendado
-31;Tenho uma consulta agendada, qual o horário?;consultar_horario_agendado
-32;Qual o dia da minha próxima consulta?;consultar_horario_agendado
-33;Quero confirmar meu horário marcado;consultar_horario_agendado
-34;Qual o horário da minha consulta amanhã?;consultar_horario_agendado
-35;Preciso saber o horário exato da minha consulta;consultar_horario_agendado
-36;Oi, tudo bem?;nenhuma
-37;Qual o preço da consulta?;nenhuma
-38;Vocês aceitam plano de saúde?;nenhuma
-39;Onde fica a clínica?;nenhuma
-40;O que preciso levar para a consulta?;nenhuma
-41;Quais especialidades vocês atendem?;nenhuma
+19;Quero reagendar minha consulta;aguardando_remarcação
+20;Preciso reagendar meu horário;aguardando_remarcação
+21;Gostaria de mudar a data da minha consulta;aguardando_remarcação
+22;Posso reagendar para um horário mais tarde?;aguardando_remarcação
+23;Quero cancelar minha consulta;aguardando_cancelamento
+24;Preciso cancelar meu horário;aguardando_cancelamento
+25;Pode cancelar minha consulta, por favor;aguardando_cancelamento
+26;Tem como desmarcar esse horário?;aguardando_cancelamento
+27;Quero cancelar porque não posso comparecer;aguardando_cancelamento
+28;Preciso cancelar e marcar para outro dia;aguardando_cancelamento
+29;Quero falar com um atendente;transferir_para_humano
+30;Preciso falar com um humano;transferir_para_humano
+31;Quero ser atendido por uma pessoa;transferir_para_humano
+32;Quero falar com alguém do suporte;transferir_para_humano
+33;Preciso tirar dúvidas diretamente com a recepção;transferir_para_humano
+34;Quero saber meu horário agendado;consultar_horario_agendado
+35;Tenho uma consulta agendada, qual o horário?;consultar_horario_agendado
+36;Qual o dia da minha próxima consulta?;consultar_horario_agendado
+37;Quero confirmar meu horário marcado;consultar_horario_agendado
+38;Qual o horário da minha consulta amanhã?;consultar_horario_agendado
+39;Preciso saber o horário exato da minha consulta;consultar_horario_agendado
+40;Oi, tudo bem?;nenhuma
+41;Qual o preço da consulta?;nenhuma
+42;Vocês aceitam plano de saúde?;nenhuma
+43;Onde fica a clínica?;nenhuma
+44;O que preciso levar para a consulta?;nenhuma
+45;Quais especialidades vocês atendem?;nenhuma
